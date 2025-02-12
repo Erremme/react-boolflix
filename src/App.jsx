@@ -7,8 +7,8 @@ import Main from "./components/Main"
 export default function App(){
   return(
     <AppdataProvider>
-      <Header />
-      <Main />
+        <Header />
+        <Main />
     </AppdataProvider>
   )
 }

@@ -3,11 +3,16 @@ import axios from "axios";
 //context
 import { useAppDataContext } from "../context/AppDataContext"
 
+
 export default function SearchBar(){
     //Variabile di stato di stato  per il valore dinamico del campo input
     const[search , setSearch] = useState("");
-    //Variabile di stato di stato estratta dal context
-    const {setMovies} = useAppDataContext()
+    //Variabile di stato per i film  estratta dal context
+    const {movies ,setMovies} = useAppDataContext()
+    //Variabile di stato per le serie tv  estratta dal context
+    const {tv , setTv} = useAppDataContext()
+
+  
 
     //funzione che fa la chiamata axios 
     const handleSearch = (e) =>{
@@ -18,11 +23,27 @@ export default function SearchBar(){
             params :{
                api_key :"322507440c7b48e5e2f7336329b6461a",
                 query: search,
-              
-
             }
-        }).then((res) => setMovies(res.data.results))
+        })
+        .then((res) => {
+            setMovies(res.data.results);
+        })
+        .catch((error) => {
+            console.error("Errore nella fetch della prima richiesta" , error);
+        })
+        axios.get("https://api.themoviedb.org/3/search/tv", {
+            params:{
+                api_key :"322507440c7b48e5e2f7336329b6461a",
+                query: search,
+            }
+        })
+        .then((res) => {
+            setTv(res.data.results)
+        })
     }
+
+
+    
 
     return(
        <form onSubmit={handleSearch}>

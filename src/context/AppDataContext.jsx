@@ -3,14 +3,15 @@ import { createContext , useContext, useState} from "react";
 
 //Creo il context
 const AppDataContext = createContext()
-//Creo un pezzo di stato
+
 
 
 //Funzione che mi consente di esportare il context
 function AppdataProvider({children}){
     const [movies , setMovies]= useState([])
+    const [tv, setTv] = useState([])
     return(
-        <AppDataContext.Provider value={{movies , setMovies}}>
+        <AppDataContext.Provider value={{movies , setMovies , tv, setTv}}>
             {children}
         </AppDataContext.Provider>
     )
