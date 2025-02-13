@@ -12,15 +12,77 @@ const flagMapping = {
     
   };
 
+  const stars = {
+
+   1: [ 
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+    ],
+
+    2 : [
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+    ],
+
+    3:[
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+    ],
+
+    4:[
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+    ],
+
+    5:[
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+        <i className= "fa-solid fa-star"></i>,
+    ]
+  
+  }
+
+  const voteNull = 
+        [
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>,
+        <i className= "fa-regular fa-star"></i>
+    ]
+  
+
 export default function Main(){
     // Destrutturazione della variabile 
     const {movies}= useAppDataContext()
     const {tv} = useAppDataContext()
+    const {dataImgMovies} = useAppDataContext()
+    console.log(dataImgMovies)
+    const {dataImgTv}= useAppDataContext()
 
     const getFlagUrl = (language) => {
         return flagMapping[language] || 
         'https://th.bing.com/th/id/R.15d698f4f3a348f6f791b4afdf4f15c3?rik=SqNXXK6Qucu45g&pid=ImgRaw&r=0';
         
+    }
+
+    const getVote = (vote) => {
+        
+        return stars[vote.toFixed(0) / 2] || voteNull
     }
 
     
@@ -47,11 +109,25 @@ export default function Main(){
                                     />          
                                 </li>
                                 <li>
-                                    <h4>Voto: {movie.vote_average}</h4>
+                                    <h4>Voto:{getVote(movie.vote_average)}</h4>
+                                    
+
                                 </li>
+                                
                             </ul>
                         </li>
+                        
                     ))}
+                </ul>
+
+                <ul>
+                    {dataImgMovies.map((imagine, index) => {
+                        return(
+                            <li key={index}>
+                                <img src={`https://image.tmdb.org/t/p/w500/${imagine}` } alt="" />
+                            </li>
+                        )
+                    })}
                 </ul>
 
             </div>
@@ -76,11 +152,20 @@ export default function Main(){
                                     />          
                                 </li>
                                 <li>
-                                    <h4>Voto: {serie.vote_average}</h4>
+                                    <h4>Voto: {getVote(serie.vote_average)}</h4>
                                 </li>
                             </ul>
                         </li>
                     ))}
+                </ul>
+                <ul>
+                    {dataImgTv.map((imagine, index) => {
+                        return(
+                            <li key={index}>
+                                <img src={`https://image.tmdb.org/t/p/w500/${imagine}` } alt="" />
+                            </li>
+                        )
+                    })}
                 </ul>
 
             </div>

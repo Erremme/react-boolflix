@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import axios from "axios";
 //context
 import { useAppDataContext } from "../context/AppDataContext"
@@ -11,6 +11,10 @@ export default function SearchBar(){
     const {movies ,setMovies} = useAppDataContext()
     //Variabile di stato per le serie tv  estratta dal context
     const {tv , setTv} = useAppDataContext()
+    //Variabile di stato per le immagini di copertina  estratta dal context
+    const {dataImgMovies, setDataImgMovies} = useAppDataContext()
+    const {dataImgTv , setDataImgTv} = useAppDataContext()
+
 
   
 
@@ -23,11 +27,18 @@ export default function SearchBar(){
             params :{
                api_key :"322507440c7b48e5e2f7336329b6461a",
                 query: search,
+
             }
         })
         .then((res) => {
             setMovies(res.data.results);
-        })
+            const arrayImgFilm = res.data.results.map((item) => (item.backdrop_path))
+            setDataImgMovies(arrayImgFilm)
+            
+    })
+          
+            
+        
         .catch((error) => {
             console.error("Errore nella fetch della prima richiesta" , error);
         })
@@ -37,11 +48,40 @@ export default function SearchBar(){
                 query: search,
             }
         })
-        .then((res) => {
+        .then((res, ) => {
             setTv(res.data.results)
+           const arrayImgTv = res.data.results.map((item) => (item.backdrop_path))
+              setDataImgTv(arrayImgTv)
+                
+                 
+            
+              
         })
-    }
+        .catch((error) => {
+            console.error("Errore nella fetch della seconda richiesta" , error);
+        })
+        
+    }     
+       
 
+        
+            
+            
+            
+        
+            
+            
+
+
+
+
+        
+
+        
+
+      
+    
+  
 
     
 

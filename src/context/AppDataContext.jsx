@@ -10,8 +10,10 @@ const AppDataContext = createContext()
 function AppdataProvider({children}){
     const [movies , setMovies]= useState([])
     const [tv, setTv] = useState([])
+    const [dataImgMovies , setDataImgMovies] = useState([])
+    const [dataImgTv , setDataImgTv] = useState([])
     return(
-        <AppDataContext.Provider value={{movies , setMovies , tv, setTv}}>
+        <AppDataContext.Provider value={{movies , setMovies , tv, setTv, dataImgMovies , setDataImgMovies , dataImgTv, setDataImgTv }}>
             {children}
         </AppDataContext.Provider>
     )
