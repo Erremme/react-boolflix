@@ -27,6 +27,8 @@ export default function SearchBar(){
             params :{
                api_key :"322507440c7b48e5e2f7336329b6461a",
                 query: search,
+                language :"it-IT",
+
 
             }
         })
@@ -46,6 +48,7 @@ export default function SearchBar(){
             params:{
                 api_key :"322507440c7b48e5e2f7336329b6461a",
                 query: search,
+                language :"it-IT",
             }
         })
         .then((res, ) => {
@@ -86,16 +89,17 @@ export default function SearchBar(){
     
 
     return(
-       <form onSubmit={handleSearch}>
+       <form className="space-x-1.5 " onSubmit={handleSearch}>
          <label htmlFor="search">Cerca il tuo film</label>
         <input 
+             className=" px-4"
             type="search" 
             id = "search"
             placeholder="Cerca.."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             />
-            <button  type=" submit">Cerca</button>
+            <button  className="bg-white rounded-md px-1" type=" submit">Cerca</button>
        </form>
     )
 

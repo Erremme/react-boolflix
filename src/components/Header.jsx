@@ -3,7 +3,7 @@ export default function Header(){
  
 
     return (
-    <div>
+    <div className="flex justify-between bg-black p-6 ">
     <h1>BoolFlix</h1>
     <SearchBar />
     </div>
