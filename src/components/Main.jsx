@@ -1,79 +1,27 @@
+import { useState , useEffect } from "react";
+import axios from "axios";
 //context
 import { useAppDataContext } from "../context/AppDataContext"
 //component
+import CardComponent from "./CardComponent";
 
 
 
-//array con le immagini delle bandiere piu importanti
-const flagMapping = {
-    it: 'https://purecatamphetamine.github.io/country-flag-icons/3x2/IT.svg', 
-    en: 'https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg',
-    fr: 'https://purecatamphetamine.github.io/country-flag-icons/3x2/FR.svg',
-    de : 'https://purecatamphetamine.github.io/country-flag-icons/3x2/DE.svg',
-    es : 'https://purecatamphetamine.github.io/country-flag-icons/3x2/ES.svg',
-    
-  };
 
-  const stars = {
-
-   1: [ 
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-    ],
-
-    2 : [
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-    ],
-
-    3:[
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-    ],
-
-    4:[
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-    ],
-
-    5:[
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-        <i className= "fa-solid fa-star"></i>,
-    ]
-  
-  }
-
-  const voteNull = 
-        [
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>,
-        <i className= "fa-regular fa-star"></i>
-    ]
-  
 
 export default function Main(){
-    // Destrutturazione della variabile 
+    // Destrutturazione della variabile per i film cercati
     const {movies}= useAppDataContext()
+    // Destrutturazione della variabile per le serietv cercate
     const {tv} = useAppDataContext()
+    //Destrutturazione della viabile per le img dei film cercati
     const {dataImgMovies} = useAppDataContext()
+    //Destrutturazione della viabile per le img delle serie tv cercate
     const {dataImgTv}= useAppDataContext()
+    //Dichiarazione variabile di stato per i film piu visti
+    const [dataMostViewed , setDataMostViewed] = useState([])
+    //Dichiarazione variabile di stato per le immagini deifilm piu visti
+    const [dataImgMostViewed , setDataImgMostViewed] = useState()
 
     const getFlagUrl = (language) => {
         return flagMapping[language] || 
@@ -86,74 +34,91 @@ export default function Main(){
         return stars[vote.toFixed(0) /2] || voteNull
     }
 
+    const fetchMovies = () => {
+        axios.get("https://api.themoviedb.org/3/movie/top_rated?api_key=322507440c7b48e5e2f7336329b6461a")
+        .then((res) => { 
+            setDataMostViewed(res.data.results)
+            const arrayImgMostViewed = res.data.results.map((item) => (item.backdrop_path))
+              setDataImgMostViewed(arrayImgMostViewed)
+        })
+    }
+
+    useEffect(fetchMovies , [])
+
+    
+    
+
+    
+    const getImageUrl = (index, img) => {
+        
+        const src =`https://image.tmdb.org/t/p/w500/${img[index]}`
+        
+        return src;
+
+        }
+
     
     return (
     
-            <main className="bg-neutral-600">
+            <main className="bg-neutral-600 min-h-screen">
             <div className="container mx-w-xl mx-auto">
-                <h1>Lista dei film</h1>
+                <h1 className="text-center text-2xl font-bold text-white">I PIU VISTI</h1>
                 <div className="grid grid-cols-12 gap-3 ">
-                    {movies.map((movie, index) => (
-                        <div key={movie.id} className="col-span-2 relative border-white  border-2">
-                            <div className="bg-white shadow-lg  h-70">
-                                <img
-                                    src={`https://image.tmdb.org/t/p/w500/${dataImgMovies[index]}`}
-                                    alt="foto"
-                                    className="w-full h-full object-cover transition-opacity duration-500 opacity-100 aspect-video "
-                                />
-                            </div>
-                            <div className="absolute inset-0 bg-black text-white opacity-0 transition-opacity duration-500 hover:opacity-100 overflow-scroll  ">
-                                <ul className="p-2 space-y-2 text-sm">
-                                    <li><span className="font-bold">Titolo:</span> {movie.title}</li>
-                                    <li><span className="font-bold">Titolo originale:</span> {movie.original_title}</li>
-                                    <li className="flex items-center">
-                                        <span className="font-bold">Lingua originale:</span>
-                                        <img
-                                            src={getFlagUrl(movie.original_language)}
-                                            alt={`Bandiera di ${movie.original_language}`}
-                                            style={{ width: '30px', height: '15px' }}
-                                        />
-                                    </li>
-                                    <li><span className="font-bold">Voto:</span> {getVote(movie.vote_average)}</li>
-                                    <li><span className="font-bold">Trama:</span> {movie.overview}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    ))}
+                    {dataMostViewed.map((film, index) =>{
+                        const src = getImageUrl(index, dataImgMostViewed)
+                        return(
+                        <CardComponent key={film.id} 
+                        src ={src}
+                        item ={film}
+                         getFlagUrl= {getFlagUrl} 
+                         getVote = {getVote}
+                         
+                        
+                        />
+                        )
+                    })}
+                    
+                </div>
+            </div>
+
+            <div className="container mx-w-xl mx-auto">
+                <h1 className="text-center text-2xl font-bold text-white">FILM</h1>
+                <div className="grid grid-cols-12 gap-3 ">
+                    {movies.map((movie, index) =>{
+                        const src = getImageUrl(index, dataImgMovies)
+                        return(
+                        <CardComponent key={movie.id} 
+                        src ={src}
+                        item ={movie}
+                         getFlagUrl= {getFlagUrl} 
+                         getVote = {getVote}
+                         
+                        
+                        />
+                        )
+                    })}
+                    
                 </div>
             </div>
             
            
             <div className="container mx-w-xl mx-auto">
-                <h1>Lista delle serie tv</h1>
-                <div className="grid grid-cols-12 gap-3">
-                    {tv.map((serie, index) => (
-                        <div key={serie.id} className="col-span-2 relative h-70 border-2 border-white">
-                            <div className="bg-white shadow-lg rounded-lg overflow-hidden h-full">
-                                <img
-                                    src={`https://image.tmdb.org/t/p/w500/${dataImgTv[index]}`}
-                                    alt="foto"
-                                    className="w-full h-full object-cover transition-opacity duration-500 opacity-100"
-                                />
-                            </div>
-                            <div className="absolute inset-0 bg-black text-white opacity-0 transition-opacity duration-500 hover:opacity-100 overflow-scroll ">
-                                <ul className="p-2 space-y-2 text-sm">
-                                    <li><span className="font-bold">Titolo:</span> {serie.name}</li>
-                                    <li><span className="font-bold">Titolo originale:</span> {serie.original_name}</li>
-                                    <li className="flex items-center">
-                                        <span className="font-bold">Lingua originale:</span>
-                                        <img
-                                            src={getFlagUrl(serie.original_language)}
-                                            alt={`Bandiera di ${serie.original_language}`}
-                                            style={{ width: '30px', height: '15px' }}
-                                        />
-                                    </li>
-                                    <li><span className="font-bold">Voto:</span> {getVote(serie.vote_average)}</li>
-                                    <li><span className="font-bold">Trama:</span> {serie.overview}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    ))}
+                <h1 className="text-center text-2xl font-bold text-white">SERIE TV</h1>
+                <div className="grid grid-cols-12 gap-3 ">
+                    {tv.map((serie, index) =>{
+                        const src = getImageUrl(index, dataImgTv)
+                        return(
+                        <CardComponent key={serie.id} 
+                        src ={src}
+                        item ={serie}
+                         getFlagUrl= {getFlagUrl} 
+                         getVote = {getVote}
+                         
+                        
+                        />
+                        )
+                    })}
+                    
                 </div>
             </div>
         </main>

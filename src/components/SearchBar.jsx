@@ -89,10 +89,10 @@ export default function SearchBar(){
     
 
     return(
-       <form className="space-x-1.5 " onSubmit={handleSearch}>
+       <form className="flex flex-row items-center gap-2" onSubmit={handleSearch}>
          <label htmlFor="search">Cerca il tuo film</label>
         <input 
-             className=" px-4"
+             className=" px-4 bg-white rounded-md"
             type="search" 
             id = "search"
             placeholder="Cerca.."
